@@ -77,6 +77,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+        System.out.println(result.size());
         return result;
     }
 
@@ -106,13 +107,35 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
     }
 
     @Override
-    public PokerSession update(PokerSession c) {
+    public PokerSession update(PokerSession s) {
         return null;
     }
 
     @Override
-    public PokerSession delete(PokerSession c) {
+    public PokerSession delete(PokerSession s) {
         return null;
+    }
+
+    @Override
+    public List<PokerSession> getStats() {
+        List<PokerSession> stats = new LinkedList<>();
+        try (
+                Connection connection = newConnection(dbType, host, port, dbName, user, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("select sum(result) from sessions");
+                Statement statement2 = connection.createStatement();
+                ResultSet resultSet2 = statement2.executeQuery("select sum(duration) from sessions")
+        ) {
+            while (resultSet.next() && resultSet2.next()) {
+                PokerSession s = new PokerSession();
+                s.setPokerSessionResult(resultSet.getFloat(1));
+                s.setPokerSessionDuration(resultSet2.getFloat(1)/60);
+                stats.add(s);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return stats;
     }
 
 }

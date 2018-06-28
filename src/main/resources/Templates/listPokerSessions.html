@@ -1,44 +1,73 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:pokerSession="http://www.w3.org/1999/xhtml">
+
 <head>
   <title>Sessions list</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style>
+table#sessionList {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 75%;
+}
+
+td, th {
+    border: 1px solid  #000000;
+    text-align: center;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color:  #fcf3cf;
+}
+
+tr:nth-child(odd) {
+    background-color:  #f9e79f;
+}
+
+th {
+    background-color:  #aed6f1;
+}
+
+td:nth-child(3) {
+    text-align: right;
+}
+
+</style>
 </head>
 <body>
 
 <h2>Add a new session</h2>
 <form action="#" th:action="@{/sessions}" th:object="${pokerSession}" method="post">
-  <div>
-    <label th:for="${pokerSessionDate}">Session Date</label>
-    <input type="text" id="pokerSessionDate" name="pokerSessionDate" th:value="*{pokerSessionDate}" />
-  </div><br/>
-  <div>
-    <label th:for="${pokerSessionDuration}">Session Duration</label>
-    <input type="text" id="pokerSessionDuration" name="pokerSessionDuration" th:value="*{pokerSessionDuration}" />
-  </div><br/>
-  <div>
-    <label th:for="${pokerSessionResult}">Session Result</label>
-    <input type="text" id="pokerSessionResult" name="pokerSessionResult" th:value="*{pokerSessionResult}" />
-  </div><br/>
-
-  <div>
-    <input type="submit" id="doUpdate" name="Add Session" value="Add Session"/>
-  </div>
+    <table id="input">
+        <tr>
+            <td><label th:for="${pokerSessionDate}">Session Date</label></td>
+            <td><input type="text" id="pokerSessionDate" name="pokerSessionDate" th:value="*{pokerSessionDate}" /></td>
+        </tr>
+        <tr>
+            <td><label th:for="${pokerSessionDuration}">Session Duration</label></td>
+            <td><input type="text" id="pokerSessionDuration" name="pokerSessionDuration" th:value="*{pokerSessionDuration}" /></td>
+        </tr>
+        <tr>
+            <td><label th:for="${pokerSessionResult}">Session Result</label></td>
+            <td><input type="text" id="pokerSessionResult" name="pokerSessionResult" th:value="*{pokerSessionResult}" /></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="doUpdate" name="Add Session" value="Add Session" onclick="return confirm('Are you sure?')"/></td>
+        </tr>
+    </table>
 </form>
 
 <h2>List of Sessions</h2>
-<table id="myTableId" pokerSession:table="true">
-  <thead>
+<table id="sessionList" pokerSession:table="true">
   <tr>
     <th>Date</th>
     <th>Duration</th>
     <th>Result</th>
     <th>ID</th>
     <th>Delete</th>
-
   </tr>
-  </thead>
   <tbody>
   <tr th:each="pokerSession : ${pokerSessions}">
     <td th:text="${pokerSession.pokerSessionDate}"></td>
@@ -52,6 +81,21 @@
     </td>
   </tr>
   </tbody>
+</table>
+
+<h2>Stats</h2>
+
+<table pokerSession:table="true">
+    <tr>
+        <th>Net result</th>
+        <th>Time played</th>
+    </tr>
+    <tbody>
+    <tr th:each="pokerSession : ${pokerStats}">
+        <td th:text="${pokerSession.pokerSessionResult}"></td>
+        <td th:text="${pokerSession.pokerSessionDuration}"></td>
+    </tr>
+    </tbody>
 </table>
 
 </body>

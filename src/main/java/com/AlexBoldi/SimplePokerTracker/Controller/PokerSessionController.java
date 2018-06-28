@@ -23,6 +23,9 @@ public class PokerSessionController {
         List<PokerSession> pokerSessions = pokerSessionService.getAll();
         model.addAttribute("pokerSessions", pokerSessions);
         model.addAttribute("pokerSession", new PokerSession());
+        List<PokerSession> pokerStats = pokerSessionService.getStats();
+        model.addAttribute("pokerStats", pokerStats);
+        model.addAttribute("pokerSession", new PokerSession());
         return "listPokerSessions";
     }
 
@@ -31,7 +34,7 @@ public class PokerSessionController {
         pokerSessionService.createPokerSession(pokerSession);
         List<PokerSession> pokerSessions = pokerSessionService.getAll();
         model.addAttribute("pokerSessions", pokerSessions);
-        return "listPokerSessions";
+        return "redirect:/sessions";
     }
 
     @RequestMapping(value = "/{pokerSessionId}", method = RequestMethod.POST)

@@ -10,5 +10,6 @@ public interface PokerSessionService {
     List<PokerSession> getAll();
     void createPokerSession(PokerSession pokerSession);
     void deletePokerSessionById(int pokerSessionId);
+    List<PokerSession> getStats();
 
 }

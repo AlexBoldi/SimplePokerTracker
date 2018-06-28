@@ -3,7 +3,7 @@ package com.AlexBoldi.SimplePokerTracker.Domain;
 public class PokerSession {
 
     private String pokerSessionDate;
-    private int pokerSessionDuration;
+    private float pokerSessionDuration;
     private float pokerSessionResult;
     private int pokerSessionId;
 
@@ -26,11 +26,11 @@ public class PokerSession {
         this.pokerSessionDate = pokerSessionDate;
     }
 
-    public int getPokerSessionDuration() {
+    public float getPokerSessionDuration() {
         return pokerSessionDuration;
     }
 
-    public void setPokerSessionDuration(int pokerSessionDuration) {
+    public void setPokerSessionDuration(float pokerSessionDuration) {
         this.pokerSessionDuration = pokerSessionDuration;
     }
 

@@ -30,4 +30,9 @@ public class PokerSessionServiceImplementation implements PokerSessionService {
         pokerSessionDao.deletePokerSessionById(pokerSessionId);
     }
 
+    @Override
+    public List<PokerSession> getStats() {
+        return pokerSessionDao.getStats();
+    }
+
 }

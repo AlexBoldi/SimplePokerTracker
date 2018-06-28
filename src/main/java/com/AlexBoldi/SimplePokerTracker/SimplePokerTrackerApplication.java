@@ -9,4 +9,5 @@ public class SimplePokerTrackerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SimplePokerTrackerApplication.class, args);
 	}
+
 }
