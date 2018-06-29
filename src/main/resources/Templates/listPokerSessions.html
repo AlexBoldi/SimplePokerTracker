@@ -6,10 +6,28 @@
   <title>Sessions list</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <style>
+
+body {
+    background-color: #eaecee;
+    font-family: arial, sans-serif;
+}
+
 table#sessionList {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 75%;
+    width: 50%;
+}
+
+table#statsList {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+table#addSession {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 25%;
 }
 
 td, th {
@@ -34,16 +52,22 @@ td:nth-child(3) {
     text-align: right;
 }
 
+td:nth-child(2) {
+    text-align: right;
+}
+
+tr:hover {background-color: #f5f5f5;}
+
 </style>
 </head>
 <body>
 
 <h2>Add a new session</h2>
 <form action="#" th:action="@{/sessions}" th:object="${pokerSession}" method="post">
-    <table id="input">
+    <table id="addSession">
         <tr>
             <td><label th:for="${pokerSessionDate}">Session Date</label></td>
-            <td><input type="text" id="pokerSessionDate" name="pokerSessionDate" th:value="*{pokerSessionDate}" /></td>
+            <td><input type="date" id="pokerSessionDate" name="pokerSessionDate" th:value="*{pokerSessionDate}" /></td>
         </tr>
         <tr>
             <td><label th:for="${pokerSessionDuration}">Session Duration</label></td>
@@ -54,26 +78,41 @@ td:nth-child(3) {
             <td><input type="text" id="pokerSessionResult" name="pokerSessionResult" th:value="*{pokerSessionResult}" /></td>
         </tr>
         <tr>
-            <td><input type="submit" id="doUpdate" name="Add Session" value="Add Session" onclick="return confirm('Are you sure?')"/></td>
+            <td><input type="submit" id="doUpdate" name="Add Session" value="Add Session"/></td>
         </tr>
     </table>
 </form>
 
-<h2>List of Sessions</h2>
+<h2>Stats</h2>
+
+<table id="statsList" pokerSession:table="true">
+    <tr>
+        <th>Net result ($)</th>
+        <th>Time played (hours)</th>
+        <th>$/hour</th>
+    </tr>
+    <tbody>
+    <tr th:each="pokerSession : ${pokerStats}">
+        <td th:text="'$' + ${pokerSession.pokerSessionResult}"></td>
+        <td th:text="${#numbers.formatDecimal(pokerSession.pokerSessionDuration,1,2)}"></td>
+        <td th:text="'$' + ${#numbers.formatDecimal(pokerSession.pokerSessionResult / pokerSession.pokerSessionDuration,2,2)}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>List of sessions</h2>
 <table id="sessionList" pokerSession:table="true">
   <tr>
     <th>Date</th>
-    <th>Duration</th>
-    <th>Result</th>
-    <th>ID</th>
+    <th>Duration (minutes)</th>
+    <th>Result ($)</th>
     <th>Delete</th>
   </tr>
   <tbody>
   <tr th:each="pokerSession : ${pokerSessions}">
     <td th:text="${pokerSession.pokerSessionDate}"></td>
-    <td th:text="${pokerSession.pokerSessionDuration}"></td>
-    <td th:text="${pokerSession.pokerSessionResult}"></td>
-    <td th:text="${pokerSession.pokerSessionId}"></td>
+    <td th:text="${#numbers.formatDecimal(pokerSession.pokerSessionDuration,1,0)}"></td>
+    <td th:text="'$' + ${pokerSession.pokerSessionResult}"></td>
     <td>
       <form th:action="@{/sessions/{id}(id=${pokerSession.pokerSessionId})}" method="post">
         <input type="submit" th:field="${pokerSession}" value="Delete Session" onclick="return confirm('Are you sure?')"/>
@@ -81,21 +120,6 @@ td:nth-child(3) {
     </td>
   </tr>
   </tbody>
-</table>
-
-<h2>Stats</h2>
-
-<table pokerSession:table="true">
-    <tr>
-        <th>Net result</th>
-        <th>Time played</th>
-    </tr>
-    <tbody>
-    <tr th:each="pokerSession : ${pokerStats}">
-        <td th:text="${pokerSession.pokerSessionResult}"></td>
-        <td th:text="${pokerSession.pokerSessionDuration}"></td>
-    </tr>
-    </tbody>
 </table>
 
 </body>

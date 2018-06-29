@@ -1,8 +1,9 @@
 package com.AlexBoldi.SimplePokerTracker.Dao;
-
 import com.AlexBoldi.SimplePokerTracker.Domain.PokerSession;
 
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        System.out.println(result.size());
+        Collections.reverse(result);
         return result;
     }
 
@@ -119,6 +120,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
     @Override
     public List<PokerSession> getStats() {
         List<PokerSession> stats = new LinkedList<>();
+        //DecimalFormat df = new DecimalFormat("#.##");
         try (
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
                 Statement statement = connection.createStatement();
@@ -129,7 +131,11 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
             while (resultSet.next() && resultSet2.next()) {
                 PokerSession s = new PokerSession();
                 s.setPokerSessionResult(resultSet.getFloat(1));
+                //String result = df.format(s.getPokerSessionResult());
+                //s.setPokerSessionResult(Float.valueOf(result));
                 s.setPokerSessionDuration(resultSet2.getFloat(1)/60);
+                //String duration = df.format(s.getPokerSessionDuration()/60);
+                //s.setPokerSessionDuration(Float.valueOf(duration));
                 stats.add(s);
             }
         } catch (Exception ex) {
