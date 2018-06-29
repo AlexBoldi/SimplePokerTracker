@@ -11,5 +11,7 @@ public interface PokerSessionService {
     void deletePokerSessionById(int pokerSessionId);
     List<PokerSession> getStats();
     List<PokerSession> getResultsOverTime();
+    void accumulateResultsOverTime(List<PokerSession> pokerSessions);
+    void writeCsvFile(List<PokerSession> pokerSessions, String filename);
 
 }

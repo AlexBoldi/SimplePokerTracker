@@ -29,6 +29,8 @@ public class PokerSessionController {
         List<PokerSession> resultsOverTime = pokerSessionService.getResultsOverTime();
         model.addAttribute("resultsOverTime", resultsOverTime);
         model.addAttribute("pokerSession", new PokerSession());
+        pokerSessionService.accumulateResultsOverTime(resultsOverTime);
+        pokerSessionService.writeCsvFile(resultsOverTime, "C:/Java Project/src/main/resources/Templates/resultsOverTime.csv");
         return "listPokerSessions";
     }
 

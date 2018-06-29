@@ -5,7 +5,6 @@ import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
-
 public class PokerSessionDaoImplementation implements PokerSessionDao {
 
     private String dbType;
@@ -104,25 +103,25 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         try (
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("select date from sessions");
+                ResultSet resultSet = statement.executeQuery("select date from sessions order by date asc");
                 Statement statement2 = connection.createStatement();
-                ResultSet resultSet2 = statement2.executeQuery("select result from sessions");
+                ResultSet resultSet2 = statement2.executeQuery("select result from sessions order by date asc");
         ) {
             while (resultSet.next() && resultSet2.next()) {
-                    PokerSession s = new PokerSession();
-                    s.setPokerSessionDate(resultSet.getString(1));
-                    s.setPokerSessionResult(resultSet2.getFloat(1));
-                    result.add(s);
+                PokerSession s = new PokerSession();
+                s.setPokerSessionDate(resultSet.getString(1));
+                s.setPokerSessionResult(resultSet2.getFloat(1));
+                result.add(s);
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        Collections.sort(result, new Comparator<PokerSession>() {
+        /*Collections.sort(result, new Comparator<PokerSession>() {
             @Override
             public int compare(PokerSession o1, PokerSession o2) {
                 return o2.getPokerSessionDate().compareTo(o1.getPokerSessionDate());
             }
-        });
+        });*/
 
         return result;
     }

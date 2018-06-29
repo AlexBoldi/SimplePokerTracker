@@ -54,4 +54,10 @@ public class PokerSession implements Comparable<PokerSession> {
     public int compareTo(PokerSession o) {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return pokerSessionDate + pokerSessionResult;
+    }
+
 }
