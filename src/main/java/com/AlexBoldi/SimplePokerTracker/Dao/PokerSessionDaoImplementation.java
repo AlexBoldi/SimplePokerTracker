@@ -3,9 +3,8 @@ import com.AlexBoldi.SimplePokerTracker.Domain.PokerSession;
 
 import java.sql.*;
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
 
 public class PokerSessionDaoImplementation implements PokerSessionDao {
 
@@ -65,7 +64,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         try(
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("select * from sessions")
+                ResultSet resultSet = statement.executeQuery("select * from sessions order by date desc")
         ) {
             while(resultSet.next()) {
                 PokerSession s = new PokerSession();
@@ -78,7 +77,12 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        Collections.reverse(result);
+       /* Collections.sort(result, new Comparator<PokerSession>() {
+            @Override
+            public int compare(PokerSession o1, PokerSession o2) {
+                return o2.getPokerSessionDate().compareTo(o1.getPokerSessionDate());
+            }
+        }); */
         return result;
     }
 
@@ -92,6 +96,35 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public List<PokerSession> getResultsOverTime() {
+        List<PokerSession> result = new LinkedList<>();
+        try (
+                Connection connection = newConnection(dbType, host, port, dbName, user, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("select date from sessions");
+                Statement statement2 = connection.createStatement();
+                ResultSet resultSet2 = statement2.executeQuery("select result from sessions");
+        ) {
+            while (resultSet.next() && resultSet2.next()) {
+                    PokerSession s = new PokerSession();
+                    s.setPokerSessionDate(resultSet.getString(1));
+                    s.setPokerSessionResult(resultSet2.getFloat(1));
+                    result.add(s);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        Collections.sort(result, new Comparator<PokerSession>() {
+            @Override
+            public int compare(PokerSession o1, PokerSession o2) {
+                return o2.getPokerSessionDate().compareTo(o1.getPokerSessionDate());
+            }
+        });
+
+        return result;
     }
 
     @Override

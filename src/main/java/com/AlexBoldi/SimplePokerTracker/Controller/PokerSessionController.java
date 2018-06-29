@@ -26,6 +26,9 @@ public class PokerSessionController {
         List<PokerSession> pokerStats = pokerSessionService.getStats();
         model.addAttribute("pokerStats", pokerStats);
         model.addAttribute("pokerSession", new PokerSession());
+        List<PokerSession> resultsOverTime = pokerSessionService.getResultsOverTime();
+        model.addAttribute("resultsOverTime", resultsOverTime);
+        model.addAttribute("pokerSession", new PokerSession());
         return "listPokerSessions";
     }
 

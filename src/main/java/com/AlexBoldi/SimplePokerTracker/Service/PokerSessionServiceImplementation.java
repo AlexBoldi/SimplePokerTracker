@@ -35,4 +35,9 @@ public class PokerSessionServiceImplementation implements PokerSessionService {
         return pokerSessionDao.getStats();
     }
 
+    @Override
+    public List<PokerSession> getResultsOverTime() {
+        return pokerSessionDao.getResultsOverTime();
+    }
+
 }
