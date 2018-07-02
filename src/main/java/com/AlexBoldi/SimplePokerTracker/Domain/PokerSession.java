@@ -1,6 +1,6 @@
 package com.AlexBoldi.SimplePokerTracker.Domain;
 
-public class PokerSession {
+public class PokerSession implements Comparable<PokerSession> {
 
     private String pokerSessionDate;
     private float pokerSessionDuration;
@@ -14,7 +14,7 @@ public class PokerSession {
         this.pokerSessionId = pokerSessionId;
     }
 
-    public PokerSession(){
+    public PokerSession() {
 
     }
 
@@ -49,4 +49,15 @@ public class PokerSession {
     public void setPokerSessionId(int pokerSessionId) {
         this.pokerSessionId = pokerSessionId;
     }
+
+    @Override
+    public int compareTo(PokerSession o) {
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return pokerSessionDate + pokerSessionResult;
+    }
+
 }

@@ -1,12 +1,20 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:pokerSession="http://www.w3.org/1999/xhtml">
+      xmlns:pokerSession="http://www.w3.org/1999/xhtml"
+      xmlns:resultsOverTime="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 
 <head>
   <title>Sessions list</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <style>
 
+    <link href="c3.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+    <style>
 body {
     background-color: #eaecee;
     font-family: arial, sans-serif;
@@ -28,6 +36,23 @@ table#addSession {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 25%;
+}
+
+table#sessionDates {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 12.5%;
+}
+
+table#accumulatedResults {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 12.5%;
+}
+table#resultsOverTime {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 12.5%;
 }
 
 td, th {
@@ -61,6 +86,73 @@ tr:hover {background-color: #f5f5f5;}
 </style>
 </head>
 <body>
+</br>
+</br>
+</br>
+
+<div id="chart"></div>
+
+<script>
+
+function parseData(generateGraph) {
+    Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vSyhK1jrh-H0BtPgyoIV-pnwpwIXnF5qIcVfzfOhA0OFtY-7rqa-PWj1i6OPsuNXR2fyXjGqMT1G_2U/pub?gid=776560498&single=true&output=csv", {
+        download: true,
+        complete: function(results) {
+            generateGraph(results.data);
+            }
+        });
+}
+
+function generateGraph(data) {
+    var date = [];
+    var netWon = [];
+
+    for (var i = 1; i < data.length; i++) {
+        date.push(data[i][0]);
+        netWon.push(data[i-1][1]);
+    }
+
+    console.log(date);
+    console.log(netWon);
+
+    var chart = c3.generate({
+    data: {
+        columns: [
+            netWon
+        ]
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: date,
+            tick: {
+                multiline: true,
+                culling: {max:15}
+            }
+        }
+    },
+    zoom: {enabled: true},
+    legend: {position: 'right'}
+});
+}
+
+parseData(generateGraph);
+
+</script>
+</div>
+
+<table id="resultsOverTime" resultsOverTime:table="true">
+    <tr>
+        <th>Date</th>
+        <th>Net won  ($)</th>
+    </tr>
+    <tbody>
+    <tr th:each="pokerSession : ${resultsOverTime}">
+        <td th:text="${pokerSession.pokerSessionDate}"></td>
+        <td th:text="'$' + ${#numbers.formatDecimal(pokerSession.pokerSessionResult,1,2)}"></td>
+    </tr>
+    </tbody>
+</table>
 
 <h2>Add a new session</h2>
 <form action="#" th:action="@{/sessions}" th:object="${pokerSession}" method="post">
@@ -70,11 +162,11 @@ tr:hover {background-color: #f5f5f5;}
             <td><input type="date" id="pokerSessionDate" name="pokerSessionDate" th:value="*{pokerSessionDate}" /></td>
         </tr>
         <tr>
-            <td><label th:for="${pokerSessionDuration}">Session Duration</label></td>
+            <td><label th:for="${pokerSessionDuration}">Session Duration (minutes)</label></td>
             <td><input type="text" id="pokerSessionDuration" name="pokerSessionDuration" th:value="*{pokerSessionDuration}" /></td>
         </tr>
         <tr>
-            <td><label th:for="${pokerSessionResult}">Session Result</label></td>
+            <td><label th:for="${pokerSessionResult}">Session Result ($)</label></td>
             <td><input type="text" id="pokerSessionResult" name="pokerSessionResult" th:value="*{pokerSessionResult}" /></td>
         </tr>
         <tr>
@@ -95,7 +187,7 @@ tr:hover {background-color: #f5f5f5;}
     <tr th:each="pokerSession : ${pokerStats}">
         <td th:text="'$' + ${pokerSession.pokerSessionResult}"></td>
         <td th:text="${#numbers.formatDecimal(pokerSession.pokerSessionDuration,1,2)}"></td>
-        <td th:text="'$' + ${#numbers.formatDecimal(pokerSession.pokerSessionResult / pokerSession.pokerSessionDuration,2,2)}"></td>
+        <td th:text="'$' + ${#numbers.formatDecimal(pokerSession.pokerSessionResult / pokerSession.pokerSessionDuration,1,2)}"></td>
     </tr>
     </tbody>
 </table>
