@@ -6,8 +6,10 @@ import java.util.List;
 
 public interface PokerSessionDao extends AbstractDao<PokerSession> {
 
+    void createNewDatabase(String name);
     void deletePokerSessionById(int pokerSessionId);
     List<PokerSession> getStats();
     List<PokerSession> getResultsOverTime();
+    void writeCsvFile(List<PokerSession> pokerSessions, String filename);
 
 }

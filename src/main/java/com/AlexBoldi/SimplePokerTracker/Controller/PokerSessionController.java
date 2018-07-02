@@ -5,20 +5,19 @@ import com.AlexBoldi.SimplePokerTracker.Service.PokerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
-@RequestMapping("/sessions")
 public class PokerSessionController {
 
     @Autowired
     private PokerSessionService pokerSessionService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(name = "/sessions", method = RequestMethod.GET)
     public String listPokerSessions(Model model) {
         List<PokerSession> pokerSessions = pokerSessionService.getAll();
         model.addAttribute("pokerSessions", pokerSessions);
@@ -30,11 +29,12 @@ public class PokerSessionController {
         model.addAttribute("resultsOverTime", resultsOverTime);
         model.addAttribute("pokerSession", new PokerSession());
         pokerSessionService.accumulateResultsOverTime(resultsOverTime);
+        Collections.reverse(resultsOverTime);
         pokerSessionService.writeCsvFile(resultsOverTime, "C:/Java Project/src/main/resources/Templates/resultsOverTime.csv");
         return "listPokerSessions";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(name = "/sessions", method = RequestMethod.POST)
     public String createPokerSession(PokerSession pokerSession, Model model) {
         pokerSessionService.createPokerSession(pokerSession);
         List<PokerSession> pokerSessions = pokerSessionService.getAll();
@@ -42,7 +42,7 @@ public class PokerSessionController {
         return "redirect:/sessions";
     }
 
-    @RequestMapping(value = "/{pokerSessionId}", method = RequestMethod.POST)
+    @RequestMapping(value = "sessions/{pokerSessionId}", method = RequestMethod.POST)
     public String deleteSessionById(@PathVariable int pokerSessionId) {
         pokerSessionService.deletePokerSessionById(pokerSessionId);
         return "redirect:/sessions";

@@ -1,6 +1,8 @@
 package com.AlexBoldi.SimplePokerTracker.Dao;
 import com.AlexBoldi.SimplePokerTracker.Domain.PokerSession;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -13,6 +15,10 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
     private String dbName;
     private String user;
     private String password;
+
+    private static final String COMMA_DELIMITER = ",";
+    private static final String NEW_LINE_SEPARATOR = "\n";
+    private static final String FILE_HEADER = "Date,Amount won";
 
     public PokerSessionDaoImplementation(String dbType, String host, String port, String dbName, String user, String password) {
         this.dbType = dbType;
@@ -86,6 +92,20 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
     }
 
     @Override
+    public void createNewDatabase(String name) {
+        try(
+                Connection connection = newConnection(dbType, host, port, dbName, user, password);
+                Statement statement = connection.createStatement()
+        ) {
+            statement.execute(" CREATE SCHEMA " + name + " AUTHORIZATION \042Admin\042");
+            statement.execute("SET search_path TO" + name);
+            statement.execute("CREATE TABLE sessions (date varchar(10), duration numeric(5,2), result money, id serial PRIMARY KEY)");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
     public void deletePokerSessionById(int pokerSessionId) {
         try(
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
@@ -97,6 +117,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         }
     }
 
+
     @Override
     public List<PokerSession> getResultsOverTime() {
         List<PokerSession> result = new LinkedList<>();
@@ -105,7 +126,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select date from sessions order by date asc");
                 Statement statement2 = connection.createStatement();
-                ResultSet resultSet2 = statement2.executeQuery("select result from sessions order by date asc");
+                ResultSet resultSet2 = statement2.executeQuery("select result from sessions order by date asc")
         ) {
             while (resultSet.next() && resultSet2.next()) {
                 PokerSession s = new PokerSession();
@@ -124,6 +145,34 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
         });*/
 
         return result;
+    }
+
+    @Override
+    public void writeCsvFile(List<PokerSession> pokerSessions, String filename) {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(filename);
+            fileWriter.append(FILE_HEADER).append(NEW_LINE_SEPARATOR);
+            for (PokerSession s : pokerSessions) {
+                fileWriter.append(String.valueOf(s.getPokerSessionDate()));
+                fileWriter.append(COMMA_DELIMITER);
+                fileWriter.append(String.valueOf(s.getPokerSessionResult()));
+                fileWriter.append(NEW_LINE_SEPARATOR);
+            }
+            fileWriter.append(" , ");
+            System.out.println("CSV file was created successfully");
+        } catch (Exception e) {
+            System.out.println("Error in CSV FileWriter");
+            e.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                System.out.println("Error while flushing/closing fileWriter");
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

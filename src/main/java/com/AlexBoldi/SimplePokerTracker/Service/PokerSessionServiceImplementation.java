@@ -2,6 +2,7 @@ package com.AlexBoldi.SimplePokerTracker.Service;
 
 import com.AlexBoldi.SimplePokerTracker.Dao.PokerSessionDao;
 import com.AlexBoldi.SimplePokerTracker.Domain.PokerSession;
+import com.AlexBoldi.SimplePokerTracker.Domain.StartPokerSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -59,28 +60,12 @@ public class PokerSessionServiceImplementation implements PokerSessionService {
 
     @Override
     public void writeCsvFile(List<PokerSession> pokerSessions, String filename) {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(filename);
-            for (PokerSession s : pokerSessions) {
-                fileWriter.append(String.valueOf(s.getPokerSessionDate()));
-                fileWriter.append(",");
-                fileWriter.append(String.valueOf(s.getPokerSessionResult()));
-                fileWriter.append("\n");
-            }
-            System.out.println("CSV file was created successfully");
-        } catch (Exception e) {
-            System.out.println("Error in CsvFileWriter");
-            e.printStackTrace();
-        } finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter");
-                e.printStackTrace();
-            }
-        }
+        pokerSessionDao.writeCsvFile(pokerSessions, filename);
+    }
+
+    @Override
+    public void startPokerSession(StartPokerSession startPokerSession) {
+
     }
 
 }
