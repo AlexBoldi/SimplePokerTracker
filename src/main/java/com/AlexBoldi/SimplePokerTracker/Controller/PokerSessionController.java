@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,14 +31,6 @@ public class PokerSessionController {
         Collections.reverse(resultsOverTime);
         pokerSessionService.writeCsvFile(resultsOverTime, "C:/Java Project/src/main/resources/Templates/resultsOverTime.csv");
         return "listPokerSessions";
-    }
-
-    @RequestMapping(name = "/sessions", method = RequestMethod.POST)
-    public String createPokerSession(PokerSession pokerSession, Model model) {
-        pokerSessionService.createPokerSession(pokerSession);
-        List<PokerSession> pokerSessions = pokerSessionService.getAll();
-        model.addAttribute("pokerSessions", pokerSessions);
-        return "redirect:/sessions";
     }
 
     @RequestMapping(value = "sessions/{pokerSessionId}", method = RequestMethod.POST)

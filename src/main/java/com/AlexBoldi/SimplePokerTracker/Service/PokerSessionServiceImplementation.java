@@ -2,13 +2,10 @@ package com.AlexBoldi.SimplePokerTracker.Service;
 
 import com.AlexBoldi.SimplePokerTracker.Dao.PokerSessionDao;
 import com.AlexBoldi.SimplePokerTracker.Domain.PokerSession;
-import com.AlexBoldi.SimplePokerTracker.Domain.StartPokerSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
@@ -61,11 +58,6 @@ public class PokerSessionServiceImplementation implements PokerSessionService {
     @Override
     public void writeCsvFile(List<PokerSession> pokerSessions, String filename) {
         pokerSessionDao.writeCsvFile(pokerSessions, filename);
-    }
-
-    @Override
-    public void startPokerSession(StartPokerSession startPokerSession) {
-
     }
 
 }

@@ -18,7 +18,8 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
 
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
-    private static final String FILE_HEADER = "Date,Amount won";
+    private static final String FILE_HEADER = "Date,Amount won\nDate,0";
+    private static final String FILE_FOOTER = "0,0";
 
     public PokerSessionDaoImplementation(String dbType, String host, String port, String dbName, String user, String password) {
         this.dbType = dbType;
@@ -92,12 +93,12 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
     }
 
     @Override
-    public void createNewDatabase(String name) {
+    public void newPlayer(String name) {
         try(
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
                 Statement statement = connection.createStatement()
         ) {
-            statement.execute(" CREATE SCHEMA " + name + " AUTHORIZATION \042Admin\042");
+            statement.execute("CREATE SCHEMA " + name + " AUTHORIZATION \042Admin\042");
             statement.execute("SET search_path TO" + name);
             statement.execute("CREATE TABLE sessions (date varchar(10), duration numeric(5,2), result money, id serial PRIMARY KEY)");
         } catch (Exception ex) {
@@ -159,7 +160,7 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
                 fileWriter.append(String.valueOf(s.getPokerSessionResult()));
                 fileWriter.append(NEW_LINE_SEPARATOR);
             }
-            fileWriter.append(" , ");
+            fileWriter.append(FILE_FOOTER);
             System.out.println("CSV file was created successfully");
         } catch (Exception e) {
             System.out.println("Error in CSV FileWriter");
