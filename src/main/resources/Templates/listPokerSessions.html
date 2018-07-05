@@ -205,7 +205,7 @@ parseData(generateGraph);
     <td th:text="'$' + ${pokerSession.pokerSessionResult}"></td>
     <td>
       <form th:action="@{/sessions/{id}(id=${pokerSession.pokerSessionId})}" method="post">
-        <input type="submit" th:field="${pokerSession}" value="Delete Session" onclick="return confirm('Are you sure?')"/>
+        <input type="submit" th:field="${pokerSession}" value="Delete session" onclick="return confirm('Are you sure?')"/>
       </form>
     </td>
   </tr>

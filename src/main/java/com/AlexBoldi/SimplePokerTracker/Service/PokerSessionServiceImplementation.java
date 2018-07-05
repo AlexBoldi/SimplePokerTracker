@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class PokerSessionServiceImplementation implements PokerSessionService {
 
-    @Qualifier("sessionDao")
+    @Qualifier("pokerSessionDao")
     @Autowired
     private PokerSessionDao pokerSessionDao;
 
@@ -23,13 +23,13 @@ public class PokerSessionServiceImplementation implements PokerSessionService {
     }
 
     @Override
-    public void createPokerSession(PokerSession pokerSession) {
+    public void create(PokerSession pokerSession) {
         pokerSessionDao.create(pokerSession);
     }
 
     @Override
-    public void deletePokerSessionById(int pokerSessionId) {
-        pokerSessionDao.deletePokerSessionById(pokerSessionId);
+    public void deleteById(int id) {
+        pokerSessionDao.deleteById(id);
     }
 
     @Override

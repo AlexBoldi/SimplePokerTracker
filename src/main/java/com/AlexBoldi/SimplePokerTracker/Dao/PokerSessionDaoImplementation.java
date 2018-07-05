@@ -101,18 +101,19 @@ public class PokerSessionDaoImplementation implements PokerSessionDao {
             statement.execute("CREATE SCHEMA " + name + " AUTHORIZATION \042Admin\042");
             statement.execute("SET search_path TO" + name);
             statement.execute("CREATE TABLE sessions (date varchar(10), duration numeric(5,2), result money, id serial PRIMARY KEY)");
+            statement.execute("CREATE TABLE tournaments (date varchar(10), buyIn money, result money, id serial PRIMARY KEY)");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void deletePokerSessionById(int pokerSessionId) {
+    public void deleteById(int id) {
         try(
                 Connection connection = newConnection(dbType, host, port, dbName, user, password);
                 Statement statement = connection.createStatement()
         ) {
-            statement.execute("delete from sessions where id = " + pokerSessionId);
+            statement.execute("delete from sessions where id = " + id);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
