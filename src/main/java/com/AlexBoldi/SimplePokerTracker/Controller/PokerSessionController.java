@@ -34,6 +34,12 @@ public class PokerSessionController {
         return "listPokerSessions";
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public String createPokerSession(PokerSession pokerSession, Model model) {
+        pokerSessionService.create(pokerSession);
+        return "redirect:/sessions";
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public String deleteById(@PathVariable int id) {
         pokerSessionService.deleteById(id);

@@ -26,6 +26,12 @@ public class TournamentSessionController {
         return "listTournamentSessions";
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public String createTournamentSession(TournamentSession tournamentSession, Model model) {
+        tournamentSessionService.createTournamentSession(tournamentSession);
+        return "redirect:/tournaments";
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public String deleteById(@PathVariable int id) {
         tournamentSessionService.deleteById(id);

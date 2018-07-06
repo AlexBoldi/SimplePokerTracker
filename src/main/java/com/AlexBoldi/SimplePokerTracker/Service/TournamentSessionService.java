@@ -7,19 +7,15 @@ import java.util.List;
 
 public interface TournamentSessionService extends AbstractDao<TournamentSession> {
 
-    List<TournamentSession> getAll();
+    //List<TournamentSession> getAll();
 
-    TournamentSession create(TournamentSession c);
+    void createTournamentSession(TournamentSession c);
 
     List<TournamentSession> getStats();
 
     List<TournamentSession> getResultsOverTime();
 
-    void deleteById(int id);
-
-    TournamentSession update(TournamentSession c);
-
-    TournamentSession delete(TournamentSession c);
+    //void deleteById(int id);
 
 }
 

@@ -8,7 +8,7 @@ public interface TournamentSessionDao extends AbstractDao<TournamentSession> {
 
     List<TournamentSession> getAll();
 
-    TournamentSession create(TournamentSession c);
+    TournamentSession createTournamentSession(TournamentSession c);
 
     List<TournamentSession> getStats();
 

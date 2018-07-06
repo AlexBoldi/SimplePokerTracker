@@ -82,8 +82,16 @@ public class TournamentSessionDaoImplementation implements TournamentSessionDao 
     }
 
     @Override
-    public TournamentSession create(TournamentSession c) {
-        return null;
+    public TournamentSession createTournamentSession(TournamentSession c) {
+        try(
+                Connection connection = newConnection(dbType, host, port, dbName, user, password);
+                Statement statement = connection.createStatement()
+        ) {
+            statement.execute("insert into tournaments values ('" + c.getDate() + "', " + c.getBuyIn() + ", " + c.getPrize() + ")");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return c;
     }
 
     @Override
@@ -106,6 +114,11 @@ public class TournamentSessionDaoImplementation implements TournamentSessionDao 
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public TournamentSession create(TournamentSession c) {
+        return null;
     }
 
     @Override

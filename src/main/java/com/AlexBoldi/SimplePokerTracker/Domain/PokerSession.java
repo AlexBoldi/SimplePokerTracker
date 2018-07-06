@@ -14,9 +14,7 @@ public class PokerSession implements Comparable<PokerSession> {
         this.pokerSessionId = pokerSessionId;
     }
 
-    public PokerSession() {
-
-    }
+    public PokerSession() { }
 
     public String getPokerSessionDate() {
         return pokerSessionDate;

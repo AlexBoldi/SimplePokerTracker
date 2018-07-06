@@ -26,6 +26,11 @@ public class TournamentSessionServiceImplementation implements TournamentSession
     }
 
     @Override
+    public void createTournamentSession (TournamentSession c) {
+        tournamentSessionDao.createTournamentSession(c);
+    }
+
+    @Override
     public List<TournamentSession> getStats() {
         return null;
     }
