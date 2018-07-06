@@ -11,12 +11,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
+@RequestMapping("/sessions")
 public class PokerSessionController {
 
     @Autowired
     private PokerSessionService pokerSessionService;
 
-    @RequestMapping(name = "/sessions", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String listPokerSessions(Model model) {
         List<PokerSession> pokerSessions = pokerSessionService.getAll();
         model.addAttribute("pokerSessions", pokerSessions);
@@ -33,9 +34,15 @@ public class PokerSessionController {
         return "listPokerSessions";
     }
 
-    @RequestMapping(value = "sessions/{pokerSessionId}", method = RequestMethod.POST)
-    public String deleteSessionById(@PathVariable int pokerSessionId) {
-        pokerSessionService.deletePokerSessionById(pokerSessionId);
+    @RequestMapping(method = RequestMethod.POST)
+    public String createPokerSession(PokerSession pokerSession, Model model) {
+        pokerSessionService.create(pokerSession);
+        return "redirect:/sessions";
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String deleteById(@PathVariable int id) {
+        pokerSessionService.deleteById(id);
         return "redirect:/sessions";
     }
 

@@ -2,10 +2,11 @@ package com.AlexBoldi.SimplePokerTracker;
 
 import com.AlexBoldi.SimplePokerTracker.Dao.PokerSessionDao;
 import com.AlexBoldi.SimplePokerTracker.Dao.PokerSessionDaoImplementation;
+import com.AlexBoldi.SimplePokerTracker.Dao.TournamentSessionDao;
+import com.AlexBoldi.SimplePokerTracker.Dao.TournamentSessionDaoImplementation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-
 
 import javax.sql.DataSource;
 
@@ -13,8 +14,19 @@ import javax.sql.DataSource;
 public class ApplicationConfiguration {
 
     @Bean
-    public PokerSessionDao sessionDao(){
+    public PokerSessionDao pokerSessionDao(){
         return new PokerSessionDaoImplementation(
+                "postgresql",
+                "localhost",
+                "5433",
+                "SimpleTracker",
+                "Admin",
+                "admin147");
+    }
+
+    @Bean
+    public TournamentSessionDao tournamentSessionDao(){
+        return new TournamentSessionDaoImplementation(
                 "postgresql",
                 "localhost",
                 "5433",
